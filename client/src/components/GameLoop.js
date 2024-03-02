@@ -5,8 +5,9 @@ import CanvasContext from './CanvasContext';
 import {MOVE_DIRECTIONS, MAP_DIMENSIONS, TILE_SIZE} from './mapConstants';
 import { MY_CHARACTER_INIT_CONFIG } from './characterConstants';
 import {checkMapCollision} from './utils';
+import {update as updateAllCharactersData} from './slices/allCharactersSlice'
 
-const GameLoop = ({children, allCharactersData}) => {
+const GameLoop = ({children, allCharactersData, updateAllCharactersData}) => {
     const canvasRef = useRef(null);
     const [context, setContext] = useState(null);
     useEffect(() => {
@@ -25,6 +26,36 @@ const GameLoop = ({children, allCharactersData}) => {
         if (MOVE_DIRECTIONS[key]) {
             // ***********************************************
             // TODO: Add your move logic here
+            // Make the character move with WASD
+            console.log('');// leave blank to separate the logs
+            console.log('*********moveMyCharacter start*********');
+            console.log(`key pressed: ${key}`);
+            console.log('currentPosition', currentPosition);
+            const currentPositionX = currentPosition.x;
+            const currentPositionY = currentPosition.y;
+
+            const newPositionX = currentPositionX + MOVE_DIRECTIONS[key][0];
+            const newPositionY = currentPositionY + MOVE_DIRECTIONS[key][1];
+            const newPosition = {
+                x: newPositionX,
+                y: newPositionY,
+            };
+            console.log('newPosition', newPosition);
+            // TODO: The collision function have problems: cannot reach the farthest grid, and can move outside the grey broad
+            if (!checkMapCollision(newPositionX, newPositionY)) {
+                console.log('collision not detected');
+
+                const cloneMyCharacterData = { ...mycharacterData };
+                cloneMyCharacterData.position = newPosition;
+                console.log('cloneMyCharacterData', cloneMyCharacterData);
+                const cloneAllCharacterData = { ...allCharactersData };
+                cloneAllCharacterData[cloneMyCharacterData.id] = cloneMyCharacterData;
+                updateAllCharactersData(cloneAllCharacterData);
+            } else {
+                console.warn('collision detected');
+            }
+
+            console.log('*********moveMyCharacter end*********');
         }
     }, [mycharacterData]);
 
@@ -35,7 +66,7 @@ const GameLoop = ({children, allCharactersData}) => {
         loopRef.current = requestAnimationFrame(tick);
     }, [context]);
 
-    useEffect(() => {   
+    useEffect(() => {
         loopRef.current = requestAnimationFrame(tick);
         return () => {
             loopRef.current && cancelAnimationFrame(loopRef.current);
@@ -52,7 +83,7 @@ const GameLoop = ({children, allCharactersData}) => {
     return (
         <CanvasContext.Provider value={context}>
             <canvas
-                ref={canvasRef} 
+                ref={canvasRef}
                 width={TILE_SIZE * MAP_DIMENSIONS.COLS}
                 height={TILE_SIZE * MAP_DIMENSIONS.ROWS}
                 class="main-canvas"
@@ -66,4 +97,4 @@ const mapStateToProps = (state) => {
     return {allCharactersData: state.allCharacters.users};
 };
 
-export default connect(mapStateToProps, {})(GameLoop);
+export default connect(mapStateToProps, {updateAllCharactersData})(GameLoop);

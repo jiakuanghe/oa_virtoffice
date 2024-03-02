@@ -70,6 +70,8 @@ export const LAYERS = [
 ];
 
 export const MOVE_DIRECTIONS = {
+    // key: [x, y]
+    // TODO: Support upper case keys here?
     w: [0, -1],
     a: [-1, 0],
     s: [0, 1],
