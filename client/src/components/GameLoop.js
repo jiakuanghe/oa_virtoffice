@@ -34,8 +34,9 @@ const GameLoop = ({children, allCharactersData, updateAllCharactersData}) => {
             const currentPositionX = currentPosition.x;
             const currentPositionY = currentPosition.y;
 
-            const newPositionX = currentPositionX + MOVE_DIRECTIONS[key][0];
-            const newPositionY = currentPositionY + MOVE_DIRECTIONS[key][1];
+            const [x, y] = MOVE_DIRECTIONS[key];
+            const newPositionX = currentPositionX + x;
+            const newPositionY = currentPositionY + y;
             const newPosition = {
                 x: newPositionX,
                 y: newPositionY,
