@@ -86,7 +86,7 @@ const GameLoop = ({children, allCharactersData, updateAllCharactersData}) => {
                 ref={canvasRef}
                 width={TILE_SIZE * MAP_DIMENSIONS.COLS}
                 height={TILE_SIZE * MAP_DIMENSIONS.ROWS}
-                class="main-canvas"
+                className="main-canvas"
             />
             {children}
         </CanvasContext.Provider>
