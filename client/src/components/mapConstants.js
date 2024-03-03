@@ -1,3 +1,8 @@
+/**
+ * TODO: Is this the size of floor tiles? (32x32) Is it height or width?
+ *
+ * @type {number}
+ */
 export const TILE_SIZE = 32;
 
 export const MAP_DIMENSIONS = {
@@ -7,12 +12,14 @@ export const MAP_DIMENSIONS = {
 };
 
 export const MAP_TILE_IMAGES = {
+    // TODO: floor1.png and floor3.png are the same image (Same MD5 file hash) Why do we need to have the same png here?
     1: 'assets/map/floor1.png',
     2: 'assets/map/floor2.png',
     3: 'assets/map/floor3.png',
 };
 
 export const LAYERS = [
+    // TODO: Why do we need to have 2 arrays here?
     [
         [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,],
         [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,],
@@ -78,4 +85,9 @@ export const MOVE_DIRECTIONS = {
     d: [1, 0],
 };
 
+/**
+ * The tiles that are solid and cannot be walked on
+ *
+ * @type {number[]}
+ */
 export const SOLID_TILES = [3];
