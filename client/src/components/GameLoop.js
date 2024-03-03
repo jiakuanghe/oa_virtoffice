@@ -43,6 +43,7 @@ const GameLoop = ({children, allCharactersData, updateAllCharactersData}) => {
             };
             console.log('newPosition', newPosition);
             // TODO: The collision function have problems: cannot reach the farthest grid, and can move outside the grey broad
+            // NOTE: If we use `if (!checkMapCollision(currentPositionX, currentPositionY)) {` here, we can move to the last grid, but cannot go up or down
             if (!checkMapCollision(newPositionX, newPositionY)) {
                 console.log('collision not detected');
 
