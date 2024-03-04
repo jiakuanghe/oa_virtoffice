@@ -27,7 +27,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "stop": "sudo lsof -ti:3000 | xargs -r sudo kill",
+    "start:github": "sudo lsof -ti:3000 | xargs -r sudo kill && REACT_APP_ENV=github react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

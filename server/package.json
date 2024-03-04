@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node src/index.js",
-    "stop": "sudo lsof -ti:8080 | xargs -r sudo kill",
+    "start:github": "sudo lsof -ti:8080 | xargs -r sudo kill && node src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
