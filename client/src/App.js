@@ -5,6 +5,7 @@ import Office from './components/Office';
 
 import './App.css';
 import { io } from 'socket.io-client';
+import { ChakraProvider } from '@chakra-ui/react'
 
 const WEBRTC_SOCKET = io(process.env.REACT_APP_ENV === 'github' ? "https://potential-waffle-x6xgxpqg7wx3vpxj-8080.app.github.dev" : "http://localhost:8080");
 
@@ -14,7 +15,7 @@ function App() {
     setSocketConnected(true);
   });
   return (
-    <>
+    <ChakraProvider>
         <header>
         </header>
         {socketConnected &&
@@ -26,7 +27,7 @@ function App() {
         }
         <footer>
         </footer>
-    </>
+    </ChakraProvider>
   );
 }
 
