@@ -14,7 +14,8 @@
 
 .main-canvas {
   display: block;
-  margin: 25px auto;
+  /* TODO: Why we need to specify the top margin 25px here? This will create a blank region at the top */
+  margin: auto;
 }
 
 .videos {
