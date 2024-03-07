@@ -7,6 +7,19 @@ import { MY_CHARACTER_INIT_CONFIG } from './characterConstants';
 import {checkMapCollision} from './utils';
 import {update as updateAllCharactersData} from './slices/allCharactersSlice'
 
+import {
+    Text,
+    Button,
+    useDisclosure,
+    Modal,
+    ModalOverlay,
+    ModalContent,
+    ModalHeader,
+    ModalFooter,
+    ModalBody,
+    ModalCloseButton,
+} from '@chakra-ui/react'
+
 const GameLoop = ({children, allCharactersData, updateAllCharactersData}) => {
     const canvasRef = useRef(null);
     const [context, setContext] = useState(null);
@@ -19,6 +32,15 @@ const GameLoop = ({children, allCharactersData, updateAllCharactersData}) => {
     // keeps the reference to the main rendering loop
     const loopRef = useRef();
     const mycharacterData = allCharactersData[MY_CHARACTER_INIT_CONFIG.id];
+
+    const OverlayOne = () => (
+        <ModalOverlay
+            backdropFilter='blur(10px)'
+        />
+    )
+
+    const { isOpen, onOpen, onClose } = useDisclosure()
+    const [overlay, setOverlay] = React.useState(<OverlayOne />)
 
     const moveMyCharacter = useCallback((e) => {
         var currentPosition = mycharacterData.position;
@@ -55,6 +77,8 @@ const GameLoop = ({children, allCharactersData, updateAllCharactersData}) => {
                 updateAllCharactersData(cloneAllCharacterData);
             } else {
                 console.warn('collision detected');
+                setOverlay(<OverlayOne />)
+                onOpen()
             }
 
             console.log('*********moveMyCharacter end*********');
@@ -83,15 +107,30 @@ const GameLoop = ({children, allCharactersData, updateAllCharactersData}) => {
     }, [moveMyCharacter]);
 
     return (
-        <CanvasContext.Provider value={context}>
-            <canvas
-                ref={canvasRef}
-                width={TILE_SIZE * MAP_DIMENSIONS.COLS}
-                height={TILE_SIZE * MAP_DIMENSIONS.ROWS}
-                className="main-canvas"
-            />
-            {children}
-        </CanvasContext.Provider>
+        <>
+            <CanvasContext.Provider value={context}>
+                <canvas
+                    ref={canvasRef}
+                    width={TILE_SIZE * MAP_DIMENSIONS.COLS}
+                    height={TILE_SIZE * MAP_DIMENSIONS.ROWS}
+                    className="main-canvas"
+                />
+                {children}
+            </CanvasContext.Provider>
+            <Modal isCentered isOpen={isOpen} onClose={onClose}>
+                {overlay}
+                <ModalContent>
+                    <ModalHeader>Collision</ModalHeader>
+                    <ModalCloseButton/>
+                    <ModalBody>
+                        <Text>You cannot go to the lava floor!</Text>
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button onClick={onClose}>Close</Button>
+                    </ModalFooter>
+                </ModalContent>
+            </Modal>
+        </>
     );
 };
 
