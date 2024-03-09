@@ -1,4 +1,4 @@
-import {LAYERS, MAP_DIMENSIONS, SOLID_TILES} from './mapConstants';
+import {LAYERS, MAP_DIMENSIONS, SOLID_TILES} from '../constances/mapConstants';
 
 /**
  * Check if the given position is a solid tile

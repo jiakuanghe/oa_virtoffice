@@ -1,7 +1,7 @@
 import {useContext, useEffect} from 'react';
 import { connect } from 'react-redux';
 
-import {LAYERS, MAP_DIMENSIONS, TILE_SIZE} from './mapConstants';
+import {LAYERS, MAP_DIMENSIONS, TILE_SIZE} from '../constances/mapConstants';
 import CanvasContext from './CanvasContext';
 import {loadMap} from './slices/statusSlice';
 
@@ -19,7 +19,7 @@ const Map = ({ loadMap }) => {
                     if (!item) {
                         // empty tile
                         continue;
-                    }                
+                    }
                     const img = document.querySelector(`#map-tile-img-${item}`);
                     const x = j * TILE_SIZE;
                     const y = i * TILE_SIZE;
