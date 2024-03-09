@@ -1,9 +1,9 @@
 import {useContext, useEffect} from 'react';
 import { connect } from 'react-redux';
 
-import {LAYERS, MAP_DIMENSIONS, TILE_SIZE} from '../constances/mapConstants';
-import CanvasContext from './CanvasContext';
-import {loadMap} from './slices/statusSlice';
+import {LAYERS, MAP_DIMENSIONS, TILE_SIZE} from '../../constances/mapConstants';
+import CanvasContext from '../CanvasContext';
+import {loadMap} from '../slices/statusSlice';
 
 const mapDispatch = { loadMap };
 

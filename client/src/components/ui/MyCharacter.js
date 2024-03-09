@@ -1,9 +1,9 @@
 import React, {useEffect} from 'react';
 import {connect} from 'react-redux';
 
-import { MY_CHARACTER_INIT_CONFIG } from '../constances/characterConstants';
-import {update as updateAllCharactersData} from './slices/allCharactersSlice'
-import {writeUserData} from '../firebase/firebase';
+import { MY_CHARACTER_INIT_CONFIG } from '../../constances/characterConstants';
+import {update as updateAllCharactersData} from '../slices/allCharactersSlice'
+import {writeUserData} from '../../firebase/firebase';
 
 import CharacterTemplate from "./CharacterTemplate";
 

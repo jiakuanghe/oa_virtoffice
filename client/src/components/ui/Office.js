@@ -3,10 +3,10 @@ import { connect } from 'react-redux';
 import Grid from './Grid';
 import ImagesBuffer from './ImagesBuffer';
 import Map from './Map';
-import CanvasContext from './CanvasContext';
+import CanvasContext from '../CanvasContext';
 import MyCharacter from './MyCharacter';
 import DatabaseCharacter from "./DatabaseCharacter";
-import {MAP_DIMENSIONS, TILE_SIZE, MAP_TILE_IMAGES} from '../constances/mapConstants';
+import {MAP_DIMENSIONS, TILE_SIZE, MAP_TILE_IMAGES} from '../../constances/mapConstants';
 
 const Office = ({mapImagesLoaded, gameStatus, webrtcSocket}) => {
     const width = MAP_DIMENSIONS.COLS * TILE_SIZE;
