@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
-import GameLoop from './components/ui/GameLoop';
-import Office from './components/ui/Office';
+import GameLoop from './components/ui/game/GameLoop';
+import Office from './components/ui/map/Office';
 
 import './App.css';
 import { io } from 'socket.io-client';

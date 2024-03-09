@@ -1,6 +1,6 @@
 import {useContext, useEffect} from 'react';
-import CanvasContext from '../CanvasContext';
-import {TILE_SIZE} from '../../constances/mapConstants';
+import CanvasContext from '../../CanvasContext';
+import {TILE_SIZE} from '../../../constances/mapConstants';
 
 const Grid = ({width, height, children}) => {
     const context = useContext(CanvasContext);
