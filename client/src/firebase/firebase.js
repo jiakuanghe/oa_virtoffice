@@ -29,9 +29,11 @@ export const writeUserData = (data) => {
     set(ref(firebaseDatabase, `users/${data.id}`), data);
 }
 
+// TODO: Where to execute this function? When the user close the browser, remove the user's date automatically?
 // https://firebase.google.com/docs/database/web/read-and-write#delete_data
-export const deleteUserData = () => {
-    set(ref(firebaseDatabase, 'users/'), null);
+export const deleteUserData = (data) => {
+    console.debug('deleteUserData, data:', data);
+    set(ref(firebaseDatabase, `users/${data.id}`), null);
 }
 
 // https://firebase.google.com/docs/database/web/read-and-write#web_value_events
