@@ -1,6 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getDatabase } from "firebase/database";
+import { getDatabase, ref, set, child, get, onValue } from "firebase/database";
+import {update as updateAllCharactersData} from '../components/slices/allCharactersSlice'
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -29,3 +30,25 @@ const firebaseConfig = {
 // Initialize Firebase
 const firebaseApp = initializeApp(firebaseConfig);
 export const firebaseDatabase = getDatabase(firebaseApp);
+
+// https://firebase.google.com/docs/database/web/read-and-write#basic_write
+export const writeUserData = (data) => {
+    console.debug('writeUserData, data:', data);
+    set(ref(firebaseDatabase, `users/${data.id}`), data);
+}
+
+// https://firebase.google.com/docs/database/web/read-and-write#delete_data
+export const deleteUserData = () => {
+    set(ref(firebaseDatabase, 'users/'), null);
+}
+
+// https://firebase.google.com/docs/database/web/read-and-write#web_value_events
+export const onUserDataChange = () => {
+    const dbRef = ref(getDatabase(), 'users/');
+    onValue(dbRef, (snapshot) => {
+        const data = snapshot.val();
+        console.debug('onUserDataChange, before, data:', data);
+        updateAllCharactersData(data)
+        console.debug('onUserDataChange, after');
+    });
+}

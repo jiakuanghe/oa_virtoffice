@@ -6,6 +6,7 @@ import {MOVE_DIRECTIONS, MAP_DIMENSIONS, TILE_SIZE} from './mapConstants';
 import { MY_CHARACTER_INIT_CONFIG } from './characterConstants';
 import {checkMapCollision} from './utils';
 import {update as updateAllCharactersData} from './slices/allCharactersSlice'
+import {writeUserData, onUserDataChange} from '../firebase/firebase';
 
 import {
     Text,
@@ -20,11 +21,14 @@ import {
     ModalCloseButton,
 } from '@chakra-ui/react'
 
+onUserDataChange();
+
 const GameLoop = ({children, allCharactersData, updateAllCharactersData}) => {
     const canvasRef = useRef(null);
     const [context, setContext] = useState(null);
     useEffect(() => {
         // frameCount used for re-rendering child components
+        // TODO: Why when we initialize, this will be printed twice? Why we need to do that?
         console.log("initial setContext");
         setContext({canvas: canvasRef.current.getContext('2d'), frameCount: 0});
     }, [setContext]);
@@ -75,6 +79,7 @@ const GameLoop = ({children, allCharactersData, updateAllCharactersData}) => {
                 const cloneAllCharacterData = { ...allCharactersData };
                 cloneAllCharacterData[cloneMyCharacterData.id] = cloneMyCharacterData;
                 updateAllCharactersData(cloneAllCharacterData);
+                writeUserData(cloneMyCharacterData);
             } else {
                 console.warn('collision detected');
                 setOverlay(<OverlayOne />)
