@@ -4,8 +4,8 @@ import Grid from './Grid';
 import ImagesBuffer from './ImagesBuffer';
 import Map from './Map';
 import CanvasContext from '../CanvasContext';
-import MyCharacter from './MyCharacter';
-import DatabaseCharacter from "./DatabaseCharacter";
+import MyCharacter from './character/MyCharacter';
+import DatabaseCharacter from "./character/DatabaseCharacter";
 import {MAP_DIMENSIONS, TILE_SIZE, MAP_TILE_IMAGES} from '../../constances/mapConstants';
 
 const Office = ({mapImagesLoaded, gameStatus, webrtcSocket}) => {

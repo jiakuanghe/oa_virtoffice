@@ -1,10 +1,10 @@
 import React, {useEffect, useContext} from 'react';
 import {connect} from 'react-redux';
 
-import CanvasConext from '../CanvasContext';
-import {CHARACTER_IMAGE_SIZE, CHARACTER_CLASSES_MAP, MY_CHARACTER_INIT_CONFIG} from '../../constances/characterConstants';
-import {TILE_SIZE} from '../../constances/mapConstants';
-import {loadCharacter} from '../slices/statusSlice';
+import CanvasConext from '../../CanvasContext';
+import {CHARACTER_IMAGE_SIZE, CHARACTER_CLASSES_MAP, MY_CHARACTER_INIT_CONFIG} from '../../../constances/characterConstants';
+import {TILE_SIZE} from '../../../constances/mapConstants';
+import {loadCharacter} from '../../slices/statusSlice';
 
 function CharacterTemplate({ charactersData, loadCharacter }) {
     const context = useContext(CanvasConext);
