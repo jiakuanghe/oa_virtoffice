@@ -43,6 +43,7 @@ export const deleteUserData = () => {
 }
 
 // https://firebase.google.com/docs/database/web/read-and-write#web_value_events
+// TODO: This function have to be put inside the useEffect(), cannot call a function here???
 export const onUserDataChange = () => {
     const dbRef = ref(getDatabase(), 'users/');
     onValue(dbRef, (snapshot) => {

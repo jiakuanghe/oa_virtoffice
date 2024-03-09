@@ -20,10 +20,20 @@ import {
     ModalBody,
     ModalCloseButton,
 } from '@chakra-ui/react'
-
-onUserDataChange();
+import {getDatabase, onValue, ref} from "firebase/database";
 
 const GameLoop = ({children, allCharactersData, updateAllCharactersData}) => {
+    useEffect(() => {
+        // TODO: Why cannot call the onUserDataChange function here
+        const dbRef = ref(getDatabase(), 'users/');
+        onValue(dbRef, (snapshot) => {
+            const data = snapshot.val();
+            // console.debug('onUserDataChange, before, data:', data);
+            updateAllCharactersData(data)
+            // console.debug('onUserDataChange, after');
+        });
+    },[])
+
     const canvasRef = useRef(null);
     const [context, setContext] = useState(null);
     useEffect(() => {

@@ -5,6 +5,7 @@ import ImagesBuffer from './ImagesBuffer';
 import Map from './Map';
 import CanvasContext from './CanvasContext';
 import MyCharacter from './MyCharacter';
+import DatabaseCharacter from "./DatabaseCharacter";
 import {MAP_DIMENSIONS, TILE_SIZE, MAP_TILE_IMAGES} from './mapConstants';
 
 const Office = ({mapImagesLoaded, gameStatus, webrtcSocket}) => {
@@ -24,11 +25,13 @@ const Office = ({mapImagesLoaded, gameStatus, webrtcSocket}) => {
             {Object.keys(mapImagesLoaded).length === Object.keys(MAP_TILE_IMAGES).length &&
                 <>
                     <Grid width={width} height={height}>
-                        <Map />                
+                        <Map />
                     </Grid>
                 </>
             }
+            {/*TODO: Loading Order? How to control exectue ordering here */}
             {gameStatus.mapLoaded && <MyCharacter webrtcSocket={webrtcSocket}/>}
+            {gameStatus.mapLoaded && <DatabaseCharacter />}
         </>
     );
 };
