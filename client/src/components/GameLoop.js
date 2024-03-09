@@ -4,7 +4,7 @@ import CanvasContext from './CanvasContext';
 
 import {MOVE_DIRECTIONS, MAP_DIMENSIONS, TILE_SIZE} from '../constances/mapConstants';
 import { MY_CHARACTER_INIT_CONFIG } from '../constances/characterConstants';
-import {checkMapCollision} from './utils';
+import {checkMapCollision} from '../utils/utils';
 import {update as updateAllCharactersData} from './slices/allCharactersSlice'
 import {writeUserData, onUserDataChange} from '../firebase/firebase';
 
