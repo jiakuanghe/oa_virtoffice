@@ -14,9 +14,9 @@ function MyCharacter({ myCharactersData, updateAllCharactersData, webrtcSocket }
             socketId: webrtcSocket.id,
         };
 
-        const users = {};
-        const myId = MY_CHARACTER_INIT_CONFIG.id;
-        users[myId] = myInitData;
+        const users = {
+            [MY_CHARACTER_INIT_CONFIG.id]: myInitData,
+        };
 
         writeUserData(myInitData)
 
