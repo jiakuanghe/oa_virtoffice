@@ -20,11 +20,12 @@ import {
     ModalBody,
     ModalCloseButton,
 } from '@chakra-ui/react'
-import {getDatabase, onValue, ref} from "firebase/database";
+import {getDatabase, onValue, ref, set} from "firebase/database";
 
 const GameLoop = ({children, allCharactersData, updateAllCharactersData}) => {
     useEffect(() => {
         // TODO: Why cannot call the onUserDataChange function here
+        console.debug('GameLoop, useEffect, onUserDataChange');
         const dbRef = ref(getDatabase(), 'users/');
         onValue(dbRef, (snapshot) => {
             const data = snapshot.val();
@@ -120,6 +121,25 @@ const GameLoop = ({children, allCharactersData, updateAllCharactersData}) => {
             document.removeEventListener('keypress', moveMyCharacter);
         }
     }, [moveMyCharacter]);
+
+    useEffect(() => {
+        const handleBeforeUnload = (e) => {
+            const message = 'Do you want to quit?';
+            e.returnValue = message;
+
+            // TODO: It doesn't work because this function didn't call
+            // Remove user data when the user close the browser
+            set(ref(getDatabase(), `users/${MY_CHARACTER_INIT_CONFIG.id}`), null);
+
+            return message;
+        };
+
+        window.addEventListener('beforeunload', handleBeforeUnload);
+
+        return () => {
+            window.removeEventListener('beforeunload', handleBeforeUnload);
+        };
+    }, []);
 
     return (
         <>
