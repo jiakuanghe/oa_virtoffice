@@ -31,7 +31,7 @@ const Office = ({mapImagesLoaded, gameStatus, webrtcSocket}) => {
             }
             {/*TODO: Loading Order? How to control exectue ordering here */}
             {gameStatus.mapLoaded && <MyCharacter webrtcSocket={webrtcSocket}/>}
-            {gameStatus.mapLoaded && <DatabaseCharacter />}
+            {gameStatus.characterLoaded && <DatabaseCharacter />}
         </>
     );
 };
