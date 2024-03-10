@@ -124,14 +124,8 @@ const GameLoop = ({children, allCharactersData, updateAllCharactersData}) => {
 
     useEffect(() => {
         const handleBeforeUnload = (e) => {
-            const message = 'Do you want to quit?';
-            e.returnValue = message;
-
-            // TODO: It doesn't work because this function didn't call
             // Remove user data when the user close the browser
             set(ref(getDatabase(), `users/${MY_CHARACTER_INIT_CONFIG.id}`), null);
-
-            return message;
         };
 
         window.addEventListener('beforeunload', handleBeforeUnload);
