@@ -6,7 +6,7 @@ import {MOVE_DIRECTIONS, MAP_DIMENSIONS, TILE_SIZE} from '../../../constances/ma
 import { MY_CHARACTER_INIT_CONFIG } from '../../../constances/characterConstants';
 import {checkMapCollision} from '../../../utils/utils';
 import {update as updateAllCharactersData} from '../../slices/allCharactersSlice'
-import {writeUserData, onUserDataChange} from '../../../firebase/firebase';
+import {writeUserData, onUserDataChange, deleteUserData} from '../../../firebase/firebase';
 
 import {
     Text,
@@ -24,8 +24,11 @@ import {getDatabase, onValue, ref, set} from "firebase/database";
 
 const GameLoop = ({children, allCharactersData, updateAllCharactersData}) => {
     useEffect(() => {
-        // TODO: Why cannot call the onUserDataChange function here
         console.debug('GameLoop, useEffect, onUserDataChange');
+
+        // TODO: Why cannot call the onUserDataChange function here
+        // onUserDataChange();
+
         const dbRef = ref(getDatabase(), 'users/');
         onValue(dbRef, (snapshot) => {
             const data = snapshot.val();
@@ -123,9 +126,9 @@ const GameLoop = ({children, allCharactersData, updateAllCharactersData}) => {
     }, [moveMyCharacter]);
 
     useEffect(() => {
-        const handleBeforeUnload = (e) => {
+        const handleBeforeUnload = () => {
             // Remove user data when the user close the browser
-            set(ref(getDatabase(), `users/${MY_CHARACTER_INIT_CONFIG.id}`), null);
+            deleteUserData(MY_CHARACTER_INIT_CONFIG)
         };
 
         window.addEventListener('beforeunload', handleBeforeUnload);
