@@ -23,7 +23,7 @@ const Map = ({ loadMap }) => {
                     const img = document.querySelector(`#map-tile-img-${item}`);
                     const x = j * TILE_SIZE;
                     const y = i * TILE_SIZE;
-                    context.canvas.drawImage(
+                    context?.canvas?.drawImage(
                         img,
                         0,
                         0,
