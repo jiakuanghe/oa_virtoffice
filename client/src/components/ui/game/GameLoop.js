@@ -44,7 +44,7 @@ const GameLoop = ({children, allCharactersData, updateAllCharactersData}) => {
         // frameCount used for re-rendering child components
         // TODO: Why when we initialize, this will be printed twice? Why we need to do that?
         console.log("initial setContext");
-        setContext({canvas: canvasRef.current.getContext('2d'), frameCount: 0});
+        setContext({canvas: canvasRef.current.getContext('2d')});
     }, [setContext]);
 
     // keeps the reference to the main rendering loop
@@ -105,13 +105,15 @@ const GameLoop = ({children, allCharactersData, updateAllCharactersData}) => {
     }, [mycharacterData]);
 
     const tick = useCallback(() => {
+        console.log("GameLoop: tick: context: ", context)
         if (context != null) {
-            setContext({canvas: context.canvas, frameCount: (context.frameCount + 1) % 60});
+            setContext({canvas: context.canvas});
         }
         loopRef.current = requestAnimationFrame(tick);
     }, [context]);
 
     useEffect(() => {
+        console.log("GameLoop: useEffect: allCharactersData: ", allCharactersData);
         loopRef.current = requestAnimationFrame(tick);
         return () => {
             loopRef.current && cancelAnimationFrame(loopRef.current);
@@ -119,6 +121,7 @@ const GameLoop = ({children, allCharactersData, updateAllCharactersData}) => {
     }, [loopRef, tick])
 
     useEffect(() => {
+        console.log("GameLoop: useEffect: moveMyCharacter: ", moveMyCharacter)
         document.addEventListener('keypress', moveMyCharacter);
         return () => {
             document.removeEventListener('keypress', moveMyCharacter);
