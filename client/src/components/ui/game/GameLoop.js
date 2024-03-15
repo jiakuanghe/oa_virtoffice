@@ -105,7 +105,7 @@ const GameLoop = ({children, allCharactersData, updateAllCharactersData}) => {
     }, [mycharacterData]);
 
     const tick = useCallback(() => {
-        console.log("GameLoop: tick: context: ", context)
+        // console.log("GameLoop: tick: context: ", context)
         if (context != null) {
             setContext({canvas: context.canvas});
         }
@@ -113,7 +113,7 @@ const GameLoop = ({children, allCharactersData, updateAllCharactersData}) => {
     }, [context]);
 
     useEffect(() => {
-        console.log("GameLoop: useEffect: allCharactersData: ", allCharactersData);
+        // console.log("GameLoop: useEffect: allCharactersData: ", allCharactersData);
         loopRef.current = requestAnimationFrame(tick);
         return () => {
             loopRef.current && cancelAnimationFrame(loopRef.current);
@@ -121,7 +121,7 @@ const GameLoop = ({children, allCharactersData, updateAllCharactersData}) => {
     }, [loopRef, tick])
 
     useEffect(() => {
-        console.log("GameLoop: useEffect: moveMyCharacter: ", moveMyCharacter)
+        // console.log("GameLoop: useEffect: moveMyCharacter: ", moveMyCharacter)
         document.addEventListener('keypress', moveMyCharacter);
         return () => {
             document.removeEventListener('keypress', moveMyCharacter);
