@@ -5,6 +5,9 @@ import {TILE_SIZE} from '../../../constances/mapConstants';
 const Grid = ({width, height, children}) => {
     const context = useContext(CanvasContext);
     useEffect(() => {
+        if (!context || !context.canvas) {
+            return;
+        }
         for(let i = 0; i < height; i++) {
             const y = i * TILE_SIZE;
             context.canvas.beginPath();

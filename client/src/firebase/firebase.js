@@ -42,6 +42,10 @@ export const onUserDataChange = () => {
     const dbRef = ref(getDatabase(), 'users/');
     onValue(dbRef, (snapshot) => {
         const data = snapshot.val();
+        if (!data) {
+            console.log('onUserDataChange, data is empty');
+            return;
+        }
         console.debug('onUserDataChange, before, data:', data);
         updateAllCharactersData(data)
         console.debug('onUserDataChange, after');
