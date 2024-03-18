@@ -26,8 +26,9 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "start:github": "sudo lsof -ti:3000 | xargs -r sudo kill && REACT_APP_ENV=github react-scripts start",
+    "start:client": "npm run copy-common-files && react-scripts start",
+    "start:client:github": "npm run copy-common-files && sudo lsof -ti:3000 | xargs -r sudo kill && REACT_APP_ENV=github react-scripts start",
+    "copy-common-files": "cp -r ../common/src/* ./src/",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
