@@ -21,7 +21,7 @@ function MyCharacter({ myCharactersData, updateAllCharactersData, webrtcSocket }
         writeUserData(myInitData)
 
         updateAllCharactersData(users);
-    }, [webrtcSocket]);
+    }, [webrtcSocket, updateAllCharactersData]);
 
     return <CharacterTemplate charactersData={myCharactersData}/>
 }

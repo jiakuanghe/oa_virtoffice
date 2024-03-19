@@ -1,4 +1,4 @@
-import React, {useEffect, useContext} from 'react';
+import {useEffect, useContext} from 'react';
 import {connect} from 'react-redux';
 
 import CanvasConext from '../../CanvasContext';
