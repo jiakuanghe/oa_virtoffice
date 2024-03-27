@@ -9,6 +9,7 @@ const io = require("socket.io")(server, {
 });
 const {
     OFFER_SIGNAL,
+    ANSWER_SIGNAL,
     CONSOLE_FORMAT_CLIENT2SERVER,
     CONSOLE_FORMAT_SERVER2CLIENT,
 } = require('../../common/src/constances/webRTCKeyConstances');
@@ -19,11 +20,13 @@ app.get('/', (req, res) => {
         res.send('Hello World');
 });
 
+// Connection Event: https://socket.io/docs/v4/emitting-events/#basic-emit
 io.on("connection", (socket) => {
     console.log(CONSOLE_FORMAT_CLIENT2SERVER, "a user connected", socket.id);
 
     socket.emit("me", socket.id);
 
+    // TODO: Use event handlers to handle the events (https://socket.io/docs/v4/server-application-structure/#each-file-registers-its-own-event-handlers)
     socket.on(OFFER_SIGNAL, ({ sourceSocketId, targetSocketId, data }) => {
         console.log(CONSOLE_FORMAT_CLIENT2SERVER, "receiveOfferSignal, sourceSocketId: ", sourceSocketId, " targetSocketId: ", targetSocketId);
         // console.log(CONSOLE_FORMAT_CLIENT2SERVER, "receiveOfferSignal, data: ", data);
@@ -31,6 +34,15 @@ io.on("connection", (socket) => {
         io.to(targetSocketId).emit(OFFER_SIGNAL, { sourceSocketId, data });
         console.log(CONSOLE_FORMAT_SERVER2CLIENT, "sendOfferSignal, sourceSocketId: ", sourceSocketId);
         // console.log(CONSOLE_FORMAT_SERVER2CLIENT, "sendOfferSignal, data: ", data);
+    });
+
+    socket.on(ANSWER_SIGNAL, ({ sourceSocketId, targetSocketId, data }) => {
+        console.log(CONSOLE_FORMAT_CLIENT2SERVER, "receiveAnswerSignal, sourceSocketId: ", sourceSocketId, " targetSocketId: ", targetSocketId);
+        // console.log(CONSOLE_FORMAT_CLIENT2SERVER, "receiveAnswerSignal, data: ", data);
+
+        io.to(targetSocketId).emit(ANSWER_SIGNAL, { targetSocketId, data });
+        console.log(CONSOLE_FORMAT_SERVER2CLIENT, "sendAnswerSignal, sourceSocketId: ", sourceSocketId);
+        // console.log(CONSOLE_FORMAT_SERVER2CLIENT, "sendAnswerSignal, data: ", data);
     });
 });
 server.listen(PORT, () => console.log(`Server is running on port ${PORT}`));

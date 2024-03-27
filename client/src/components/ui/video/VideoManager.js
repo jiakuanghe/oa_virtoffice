@@ -1,15 +1,51 @@
 import React, {useEffect, useState} from "react";
 import { connect } from "react-redux";
-import SimplePeerTemplate from "./SimplePeerTemplate";
-import MyVideo from "./MyVideo";
+import PeerTemplate from "./PeerTemplate";
 import {MY_CHARACTER_INIT_CONFIG} from "../../../constances/characterConstants";
 import {
     OFFER_SIGNAL,
     CONSOLE_FORMAT_SERVER2CLIENT,
 } from '../../../constances/webRTCKeyConstances';
 
-function VideoManager({myCharacter, otherCharacters, webrtcSocket}) {
+function VideoManager({myCharacter, otherCharacters, allCharacters, webrtcSocket}) {
     const [myMediaStream, setMyMediaStream] = useState();
+    const [offer, setOffer] = useState({});//key: socketId, value: offerSignal Data
+
+    // ----------------- simple-peer: https://github.com/feross/simple-peer?tab=readme-ov-file#videovoice -----------------
+    // var Peer = require('simple-peer')
+    //
+    // // get video/voice stream
+    // navigator.mediaDevices.getUserMedia({
+    //     video: true,
+    //     audio: true
+    // }).then(gotMedia).catch(() => {})
+    //
+    // function gotMedia (stream) {
+    //     var peer1 = new Peer({ initiator: true, stream: stream })
+    //     var peer2 = new Peer()
+    //
+    //     peer1.on('signal', data => {
+    //         peer2.signal(data)
+    //     })
+    //
+    //     peer2.on('signal', data => {
+    //         peer1.signal(data)
+    //     })
+    //
+    //     peer2.on('stream', stream => {
+    //         // got remote video stream, now let's show it in a video tag
+    //         var video = document.querySelector('video')
+    //
+    //         if ('srcObject' in video) {
+    //             video.srcObject = stream
+    //         } else {
+    //             video.src = window.URL.createObjectURL(stream) // for older browsers
+    //         }
+    //
+    //         // video.play()
+    //     })
+    // }
+    // ----------------- simple-peer: https://github.com/feross/simple-peer?tab=readme-ov-file#videovoice -----------------
 
     // console.log('otherCharacters:', otherCharacters);
 
@@ -29,6 +65,7 @@ function VideoManager({myCharacter, otherCharacters, webrtcSocket}) {
     useEffect(() => {
         const receiveOfferSignalHandler = ({ sourceSocketId, data }) => {
             console.log(CONSOLE_FORMAT_SERVER2CLIENT, 'Received offer from:', sourceSocketId, ', Offer signal:', data);
+            setOffer({...offer, [sourceSocketId]: data});
         }
         webrtcSocket?.on(OFFER_SIGNAL, receiveOfferSignalHandler);
         return () => {
@@ -39,14 +76,25 @@ function VideoManager({myCharacter, otherCharacters, webrtcSocket}) {
     // https://github.com/feross/simple-peer?tab=readme-ov-file#connecting-more-than-2-peers
     return <>{
         myCharacter && <div className="videos">
-            <MyVideo myMediaStream={myMediaStream}/>
-            {Object.keys(otherCharacters).map(id => {
-                return <SimplePeerTemplate
-                    key = {otherCharacters[id]}
+            {Object.keys(allCharacters).map(id => {
+                return <PeerTemplate
+                    key = {'init_' + myCharacter.id}
+                    sourceSocketId={myCharacter.socketId}
+                    targetSocketId={allCharacters[id].socketId}
+                    myMediaStream={myMediaStream}
+                    webrtcSocket={webrtcSocket}
+                    isInitiator={true}
+                />
+            })}
+
+            {Object.keys(offer).map(id => {
+                return <PeerTemplate
+                    key = {'answer_' + otherCharacters[id]}
                     sourceSocketId={myCharacter.socketId}
                     myMediaStream={myMediaStream}
                     targetSocketId={otherCharacters[id].socketId}
                     webrtcSocket={webrtcSocket}
+                    isInitiator={false}
                 />
             })}
         </div>
@@ -63,7 +111,7 @@ const mapStateToProps = (state) => {
             filterObj[key] = allCharacters[key];
             return filterObj;
         }, {});
-    return {myCharacter, otherCharacters};
+    return {myCharacter, otherCharacters, allCharacters};
 }
 
 export default connect(mapStateToProps, {})(VideoManager);
