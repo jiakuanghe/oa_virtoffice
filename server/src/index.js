@@ -23,6 +23,10 @@ app.get('/', (req, res) => {
 // Connection Event: https://socket.io/docs/v4/emitting-events/#basic-emit
 io.on("connection", (socket) => {
     console.log(CONSOLE_FORMAT_CLIENT2SERVER, "a user connected", socket.id);
+    // https://socket.io/docs/v4/tutorial/step-3
+    socket.on("disconnect", () => {
+        console.log(CONSOLE_FORMAT_CLIENT2SERVER, "a user disconnected", socket.id);
+    });
 
     socket.emit("me", socket.id);
 
