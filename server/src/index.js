@@ -48,5 +48,10 @@ io.on("connection", (socket) => {
         console.log(CONSOLE_FORMAT_SERVER2CLIENT, "sendAnswerSignal, sourceSocketId: ", sourceSocketId);
         // console.log(CONSOLE_FORMAT_SERVER2CLIENT, "sendAnswerSignal, data: ", data);
     });
+
+    socket.on('chat', ({msg}) => {
+        console.log('receive chat msg:', msg);
+        io.emit('chat', {msg});
+    });
 });
 server.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
