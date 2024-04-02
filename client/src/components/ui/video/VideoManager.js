@@ -6,8 +6,9 @@ import {
     OFFER_SIGNAL,
     CONSOLE_FORMAT_SERVER2CLIENT,
 } from '../../../constances/webRTCKeyConstances';
+import VideoTemplate from "./VideoTemplate";
 
-function VideoManager({myCharacter, otherCharacters, allCharacters, webrtcSocket}) {
+function VideoManager({myCharacter, otherCharacters, allCharacters, otherCharactersOrdered, webrtcSocket}) {
     const [myMediaStream, setMyMediaStream] = useState();
     const [offer, setOffer] = useState({});//key: socketId, value: offerSignal Data
 
@@ -76,25 +77,28 @@ function VideoManager({myCharacter, otherCharacters, allCharacters, webrtcSocket
     // https://github.com/feross/simple-peer?tab=readme-ov-file#connecting-more-than-2-peers
     return <>{
         myCharacter && <div className="videos">
-            {Object.keys(allCharacters).map(id => {
+            <VideoTemplate mediaStream={myMediaStream} />
+
+            {Object.keys(otherCharactersOrdered).map(id => {
                 return <PeerTemplate
-                    key = {'init_' + myCharacter.id}
+                    key = {id}
                     sourceSocketId={myCharacter.socketId}
-                    targetSocketId={allCharacters[id].socketId}
+                    targetSocketId={otherCharactersOrdered[id].socketId}
                     myMediaStream={myMediaStream}
                     webrtcSocket={webrtcSocket}
                     isInitiator={true}
                 />
             })}
 
-            {Object.keys(offer).map(id => {
+            {Object.keys(offer).map(socketId => {
                 return <PeerTemplate
-                    key = {'answer_' + otherCharacters[id]}
+                    key = {socketId}
                     sourceSocketId={myCharacter.socketId}
                     myMediaStream={myMediaStream}
-                    targetSocketId={otherCharacters[id].socketId}
+                    targetSocketId={socketId}
                     webrtcSocket={webrtcSocket}
                     isInitiator={false}
+                    offerSignal={offer[socketId]}
                 />
             })}
         </div>
@@ -111,7 +115,13 @@ const mapStateToProps = (state) => {
             filterObj[key] = allCharacters[key];
             return filterObj;
         }, {});
-    return {myCharacter, otherCharacters, allCharacters};
+    const otherCharactersOrdered = Object.keys(otherCharacters)
+        .filter(id => id >= myCharacterId)
+        .reduce((filterObj, key) => {
+            filterObj[key] = otherCharacters[key];
+            return filterObj;
+        }, {});
+    return {myCharacter, otherCharacters, allCharacters, otherCharactersOrdered};
 }
 
 export default connect(mapStateToProps, {})(VideoManager);

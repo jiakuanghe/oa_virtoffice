@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef } from "react";
+import React, {useCallback, useEffect, useRef, useState} from "react";
 import Peer from 'simple-peer';
 import {
     OFFER_SIGNAL,
@@ -8,9 +8,10 @@ import {
 } from '../../../constances/webRTCKeyConstances';
 import VideoTemplate from "./VideoTemplate";
 
-function PeerTemplate({sourceSocketId, targetSocketId, myMediaStream, webrtcSocket, isInitiator = true}) {
+function PeerTemplate({sourceSocketId, targetSocketId, myMediaStream, webrtcSocket, isInitiator = true, offerSignal}) {
     const peerRef = useRef();
-    const cb = useCallback((sourceSocketId, targetSocketId, stream, webrtcSocket, isInitiator) => {
+    const [stream, setStream] = useState(myMediaStream);
+    const cb = useCallback((sourceSocketId, targetSocketId, stream, webrtcSocket, isInitiator, offerSignal) => {
         // https://github.com/feross/simple-peer?tab=readme-ov-file#api
         const peer = new Peer({
             initiator: isInitiator,//initiator - set to true if this is the initiating peer
@@ -30,16 +31,27 @@ function PeerTemplate({sourceSocketId, targetSocketId, myMediaStream, webrtcSock
                 console.log(CONSOLE_FORMAT_CLIENT2SERVER, `sendAnswerSignal, sourceSocketId: ${sourceSocketId}, targetSocketId: ${targetSocketId}, data: ${data}`);
                 webrtcSocket.emit(ANSWER_SIGNAL, { sourceSocketId, targetSocketId, data })
             });
+            peer.signal(offerSignal);
         }
 
         return peer;
     },[]);
 
     useEffect(() => {
-        peerRef.current = cb(sourceSocketId, targetSocketId, myMediaStream, webrtcSocket, isInitiator);
-    }, [sourceSocketId, targetSocketId, myMediaStream, webrtcSocket, isInitiator]);
+        peerRef.current = cb(sourceSocketId, targetSocketId, myMediaStream, webrtcSocket, isInitiator, offerSignal);
+        peerRef.current.on('stream', (stream) => {
+            console.log(CONSOLE_FORMAT_SERVER2CLIENT, `receivedStream, sourceSocketId: ${sourceSocketId}, targetSocketId: ${targetSocketId}`);
+            setStream(stream);
+        });
+        if (isInitiator) {
+            webrtcSocket.on(ANSWER_SIGNAL, ({targetSocketId, data }) => {
+                console.log(CONSOLE_FORMAT_SERVER2CLIENT, `receivedAnswerSignal, sourceSocketId: ${sourceSocketId}, targetSocketId: ${targetSocketId}, data: ${data}`);
+                peerRef.current.signal(data);
+            });
+        }
+    }, [sourceSocketId, targetSocketId, myMediaStream, webrtcSocket, isInitiator, offerSignal]);
 
-    return <VideoTemplate mediaStream={myMediaStream}/>
+    return <VideoTemplate mediaStream={stream}/>
 }
 
 export default PeerTemplate;
