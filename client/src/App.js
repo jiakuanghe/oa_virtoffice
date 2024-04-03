@@ -26,7 +26,7 @@ function App() {
                 <Office webrtcSocket={WEBRTC_SOCKET}/>
               </GameLoop>
               <ChatRoom webrtcSocket={WEBRTC_SOCKET} />
-              {/*<VideoManager webrtcSocket={WEBRTC_SOCKET} />*/}
+              <VideoManager webrtcSocket={WEBRTC_SOCKET} />
           </main>
         }
         <footer>

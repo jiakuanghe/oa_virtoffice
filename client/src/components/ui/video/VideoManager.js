@@ -79,11 +79,11 @@ function VideoManager({myCharacter, otherCharacters, allCharacters, otherCharact
         myCharacter && <div className="videos">
             <VideoTemplate mediaStream={myMediaStream} />
 
-            {Object.keys(otherCharactersOrdered).map(id => {
+            {Object.keys(otherCharacters).map(id => {
                 return <PeerTemplate
                     key = {id}
                     sourceSocketId={myCharacter.socketId}
-                    targetSocketId={otherCharactersOrdered[id].socketId}
+                    targetSocketId={otherCharacters[id].socketId}
                     myMediaStream={myMediaStream}
                     webrtcSocket={webrtcSocket}
                     isInitiator={true}
