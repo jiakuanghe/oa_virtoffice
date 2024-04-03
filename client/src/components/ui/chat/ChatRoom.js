@@ -12,7 +12,7 @@ import {
     Input,
     Stack, useDisclosure, Radio, RadioGroup,
 } from '@chakra-ui/react'
-import React from "react";
+import React, {useEffect} from "react";
 
 function ChatRoom({webrtcSocket}) {
     const { isOpen, onOpen, onClose } = useDisclosure()
@@ -22,15 +22,18 @@ function ChatRoom({webrtcSocket}) {
 
     const [chatMsg, setChatMsg] = React.useState()
 
-    webrtcSocket.on('chat', ({msg}) => {
-        console.log('chat data:', msg);
-        // setChatMsg(<p>{data.msg}</p>)
-        const item = document.createElement('li');
-        item.textContent = msg;
-        console.log(item)
-        document.getElementById('messages').appendChild(item);
-        window.scrollTo(0, document.body.scrollHeight);
-    });
+    useEffect(() => {
+        webrtcSocket.on('chat', ({msg}) => {
+            console.log('chat data:', msg);
+            // setChatMsg(<p>{data.msg}</p>)
+            const item = document.createElement('li');
+            item.textContent = msg;
+            console.log(item)
+            document.getElementById('messages').appendChild(item);
+            window.scrollTo(0, document.body.scrollHeight);
+        });
+    }, [])
+
 
     function sendMsg() {
         console.log('click sendMsg');
