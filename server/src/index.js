@@ -49,9 +49,9 @@ io.on("connection", (socket) => {
         // console.log(CONSOLE_FORMAT_SERVER2CLIENT, "sendAnswerSignal, data: ", data);
     });
 
-    socket.on('chat', ({msg}) => {
-        console.log('receive chat msg:', msg);
-        io.emit('chat', {msg});
+    socket.on('chat', ({msg, sender, receiver}) => {
+        console.log(CONSOLE_FORMAT_CLIENT2SERVER, 'chat', {msg, sender, receiver});
+        io.emit('chat', {msg, sender, receiver});
     });
 });
 server.listen(PORT, () => console.log(`Server is running on port ${PORT}`));

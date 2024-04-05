@@ -4,6 +4,7 @@ import GameLoop from './components/ui/game/GameLoop';
 import Office from './components/ui/map/Office';
 import VideoManager from "./components/ui/video/VideoManager";
 import ChatRoom from "./components/ui/chat/ChatRoom";
+import Register from "./components/ui/game/Register";
 
 import './App.css';
 import { io } from 'socket.io-client';
@@ -16,6 +17,14 @@ function App() {
   WEBRTC_SOCKET.on('connect', () => {
     setSocketConnected(true);
   });
+
+  const [blockKeyPress, setBlockKeyPress] = useState(false);
+    const handleKeyPress = (event) => {
+        if (blockKeyPress) {
+            event.stopPropagation();
+        }
+    };
+
   return (
     <ChakraProvider>
         <header>
@@ -25,7 +34,8 @@ function App() {
               <GameLoop>
                 <Office webrtcSocket={WEBRTC_SOCKET}/>
               </GameLoop>
-              <ChatRoom webrtcSocket={WEBRTC_SOCKET} />
+              <Register blockKeyPress={blockKeyPress} setBlockKeyPress={setBlockKeyPress}  />
+              <ChatRoom blockKeyPress={blockKeyPress} setBlockKeyPress={setBlockKeyPress} webrtcSocket={WEBRTC_SOCKET} />
               <VideoManager webrtcSocket={WEBRTC_SOCKET} />
           </main>
         }

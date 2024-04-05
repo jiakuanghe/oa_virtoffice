@@ -13,8 +13,12 @@ import {
     Stack, useDisclosure, Radio, RadioGroup,
 } from '@chakra-ui/react'
 import React, {useEffect} from "react";
+import {MY_CHARACTER_INIT_CONFIG} from "../../../constances/characterConstants";
+import {connect} from "react-redux";
+import {allowMove} from "../../slices/statusSlice";
+import {CONSOLE_FORMAT_SERVER2CLIENT} from "../../../constances/webRTCKeyConstances";
 
-function ChatRoom({webrtcSocket}) {
+const ChatRoom = ({allowMove, allCharactersData, webrtcSocket}) => {
     const { isOpen, onOpen, onClose } = useDisclosure()
     const [placement, setPlacement] = React.useState('right')
     const nameField = React.useRef()
@@ -23,25 +27,49 @@ function ChatRoom({webrtcSocket}) {
     const [chatMsg, setChatMsg] = React.useState()
 
     useEffect(() => {
-        webrtcSocket.on('chat', ({msg}) => {
-            console.log('chat data:', msg);
-            // setChatMsg(<p>{data.msg}</p>)
-            const item = document.createElement('li');
-            item.textContent = msg;
-            console.log(item)
-            document.getElementById('messages').appendChild(item);
-            window.scrollTo(0, document.body.scrollHeight);
+        webrtcSocket.on('chat', ({msg, sender, receiver}) => {
+            console.log(CONSOLE_FORMAT_SERVER2CLIENT, 'chat', {msg, sender, receiver})
+            const mycharacterData = allCharactersData[MY_CHARACTER_INIT_CONFIG.id];
+            console.log('allCharactersData', allCharactersData)
+            console.log('MY_CHARACTER_INIT_CONFIG.id', MY_CHARACTER_INIT_CONFIG.id)
+            console.log('mycharacterData', mycharacterData)
+            console.log('mycharacterData.name', mycharacterData.name)
+            if (!receiver || receiver === mycharacterData.name || sender === mycharacterData.name) {
+                // setChatMsg(<p>{data.msg}</p>)
+                const msgDom = document.getElementById('messages');
+                if (!msgDom) return;
+                const item = document.createElement('li');
+                item.textContent = msg;
+                console.log(item)
+                msgDom.appendChild(item);
+                window.scrollTo(0, document.body.scrollHeight);
+            }
         });
-    }, [])
 
+        return () => {
+            webrtcSocket.off('chat')
+        };
+    }, [allCharactersData])
 
     function sendMsg() {
         console.log('click sendMsg');
-        let name = nameField.current.value;
+        const mycharacterData = allCharactersData[MY_CHARACTER_INIT_CONFIG.id];
+        let receiver = nameField.current.value;
+        let sender = mycharacterData.name;
         let sendMsg = messageField.current.value;
-        let msg = `${name}: ${sendMsg}`;
+        let msg = `${sender}: ${sendMsg}`;
         console.log(msg);
-        webrtcSocket.emit('chat', {msg})
+        webrtcSocket.emit('chat', {msg, sender, receiver})
+    }
+
+    function open() {
+        allowMove(false);
+        onOpen();
+    }
+
+    function close() {
+        allowMove(true);
+        onClose();
     }
 
     return (
@@ -54,20 +82,20 @@ function ChatRoom({webrtcSocket}) {
                     <Radio value='left'>Left</Radio>
                 </Stack>
             </RadioGroup>
-            <Button colorScheme='blue' onClick={onOpen}>
+            <Button colorScheme='blue' onClick={open}>
                 Enter Chat Room
             </Button>
-            <Drawer placement={placement} onClose={onClose} isOpen={isOpen}>
+            <Drawer placement={placement} onClose={close} isOpen={isOpen}>
                 <DrawerOverlay />
                 <DrawerContent>
                     <DrawerCloseButton />
                     <DrawerHeader borderBottomWidth='1px'>Basic Drawer</DrawerHeader>
                     <Box>
-                        <FormLabel htmlFor='username'>Name</FormLabel>
+                        <FormLabel htmlFor='username'>Send Message To</FormLabel>
                         <Input
                             ref={nameField}
                             id='username'
-                            placeholder='Please enter user name'
+                            placeholder='leavel blank to send to all users'
                         />
                         <FormLabel htmlFor='message'>Message</FormLabel>
                         <Textarea
@@ -89,4 +117,8 @@ function ChatRoom({webrtcSocket}) {
     )
 }
 
-export default ChatRoom;
+const mapStateToProps = (state) => {
+    return {allCharactersData: state.allCharacters.users};
+};
+
+export default connect(mapStateToProps, {allowMove})(ChatRoom);

@@ -22,7 +22,7 @@ import {
 } from '@chakra-ui/react'
 import {getDatabase, onValue, ref, set} from "firebase/database";
 
-const GameLoop = ({children, allCharactersData, updateAllCharactersData}) => {
+const GameLoop = ({children, gameStatus, allCharactersData, updateAllCharactersData}) => {
     useEffect(() => {
         console.debug('GameLoop, useEffect, onUserDataChange');
 
@@ -65,6 +65,10 @@ const GameLoop = ({children, allCharactersData, updateAllCharactersData}) => {
     const [overlay, setOverlay] = React.useState(<OverlayOne />)
 
     const moveMyCharacter = useCallback((e) => {
+        console.log('moveMyCharacter')
+        console.log('gameStatus', gameStatus.moveAllowed.payload)
+        if (!gameStatus.moveAllowed.payload) return false;
+
         var currentPosition = mycharacterData.position;
         const key = e.key;
         if (MOVE_DIRECTIONS[key]) {
@@ -106,7 +110,7 @@ const GameLoop = ({children, allCharactersData, updateAllCharactersData}) => {
 
             console.log('*********moveMyCharacter end*********');
         }
-    }, [mycharacterData]);
+    }, [mycharacterData, gameStatus]);
 
     const tick = useCallback(() => {
         // console.log("GameLoop: tick: context: ", context)
@@ -174,7 +178,7 @@ const GameLoop = ({children, allCharactersData, updateAllCharactersData}) => {
 };
 
 const mapStateToProps = (state) => {
-    return {allCharactersData: state.allCharacters.users};
+    return {allCharactersData: state.allCharacters.users, gameStatus: state.gameStatus};
 };
 
 export default connect(mapStateToProps, {updateAllCharactersData})(GameLoop);
