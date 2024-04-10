@@ -10,9 +10,9 @@ import {
     Textarea,
     Button,
     Input,
-    Stack, useDisclosure, Radio, RadioGroup,
+    Stack, useDisclosure, Radio, RadioGroup, Select,
 } from '@chakra-ui/react'
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import {MY_CHARACTER_INIT_CONFIG} from "../../../constances/characterConstants";
 import {connect} from "react-redux";
 import {allowMove} from "../../slices/statusSlice";
@@ -25,6 +25,7 @@ const ChatRoom = ({allowMove, allCharactersData, webrtcSocket}) => {
     const messageField = React.useRef()
 
     const [chatMsg, setChatMsg] = React.useState()
+    const [selectedUsername, setSelectedUsername] = useState("");
 
     useEffect(() => {
         webrtcSocket.on('chat', ({msg, sender, receiver}) => {
@@ -34,7 +35,7 @@ const ChatRoom = ({allowMove, allCharactersData, webrtcSocket}) => {
             console.log('MY_CHARACTER_INIT_CONFIG.id', MY_CHARACTER_INIT_CONFIG.id)
             console.log('mycharacterData', mycharacterData)
             console.log('mycharacterData.name', mycharacterData.name)
-            if (!receiver || receiver === mycharacterData.name || sender === mycharacterData.name) {
+            if (!receiver || receiver === mycharacterData.name || receiver === 'all' || sender === mycharacterData.name) {
                 // setChatMsg(<p>{data.msg}</p>)
                 const msgDom = document.getElementById('messages');
                 if (!msgDom) return;
@@ -54,7 +55,9 @@ const ChatRoom = ({allowMove, allCharactersData, webrtcSocket}) => {
     function sendMsg() {
         console.log('click sendMsg');
         const mycharacterData = allCharactersData[MY_CHARACTER_INIT_CONFIG.id];
-        let receiver = nameField.current.value;
+        // let receiver = nameField.current.value;
+        let receiver = selectedUsername;
+        console.log('receiver', receiver)
         let sender = mycharacterData.name;
         let sendMsg = messageField.current.value;
         let msg = `${sender}: ${sendMsg}`;
@@ -89,14 +92,22 @@ const ChatRoom = ({allowMove, allCharactersData, webrtcSocket}) => {
                 <DrawerOverlay />
                 <DrawerContent>
                     <DrawerCloseButton />
-                    <DrawerHeader borderBottomWidth='1px'>Basic Drawer</DrawerHeader>
+                    <DrawerHeader borderBottomWidth='1px'>Chat Room</DrawerHeader>
                     <Box>
                         <FormLabel htmlFor='username'>Send Message To</FormLabel>
-                        <Input
-                            ref={nameField}
-                            id='username'
-                            placeholder='leavel blank to send to all users'
-                        />
+                        <Select id='username' placeholder='Select option'
+                                onChange={event=> {setSelectedUsername(event.target.value)}}
+                                value={selectedUsername}>
+                            <option ref={nameField} value='all'>Send To Everyone</option>
+                            {Object.keys(allCharactersData).filter(id => id !== MY_CHARACTER_INIT_CONFIG.id).map(id => {
+                                return <option ref={nameField} key={id} value={allCharactersData[id].name}>{allCharactersData[id].name}</option>
+                            })}
+                        </Select>
+                        {/*<Input*/}
+                        {/*    ref={nameField}*/}
+                        {/*    id='username'*/}
+                        {/*    placeholder='leavel blank to send to all users'*/}
+                        {/*/>*/}
                         <FormLabel htmlFor='message'>Message</FormLabel>
                         <Textarea
                             ref={messageField}
