@@ -55,6 +55,7 @@
 * [![Firebase][Firebase-shield]][Firebase-url]
 * [![Chakra_UI][Chakra_UI-shield]][Chakra_UI-url]
 * [![Socket_IO][Socket_IO-shield]][Socket_IO-url]
+* [![Peer_JS][Peer_JS-shield]][Peer_JS-url]
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -112,3 +113,5 @@ To get a local copy up and running follow these simple example steps.
 [Chakra_UI-url]: https://v2.chakra-ui.com/
 [Socket_IO-shield]: https://img.shields.io/badge/Socket.io-black?style=for-the-badge&logo=socket.io&badgeColor=010101
 [Socket_IO-url]: https://socket.io/
+[Peer_JS-shield]: https://img.shields.io/badge/peerjs-black?style=for-the-badge&logo=peerjs&badgeColor=010101
+[Peer_JS-url]: https://peerjs.com/
